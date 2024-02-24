@@ -51,13 +51,15 @@ numAssoc(I,A,ID2,C) :- C = #count{ ID1 : ooasp_associated(I,A,ID1,ID2)}, ooasp_a
 :- ooasp_instantiation(M,I), ooasp_assoc(M,A,C1,C1MIN,C1MAX,C2,C2MIN,C2MAX), ooasp_isa(I,SC1,ID1), ooasp_subclass(M,SC1,C1), numAssoc(I,A,ID1,C), C>C2MAX.
 
 % Class attribute check
-:- ooasp_instantiation(M,I), ooasp_attribute_enum(M,C,AT,V1), ooasp_isa(I,C,ID), ooasp_attribute_value(I,AT,ID,V2), V1!=V2.
+allowed_value(AT,ID,V) :- ooasp_instantiation(M,I), ooasp_attribute_enum(M,C,AT,V), ooasp_isa(I,C,ID), ooasp_attribute_value(I,AT,ID,V).
 :- ooasp_attribute_value(I,AT,ID,V), ooasp_isa(I,C,ID), ooasp_attribute_minInclusive(I,C,AT,MIN), ooasp_attribute_maxInclusive(I,C,AT,MAX), V<MIN.
 :- ooasp_attribute_value(I,AT,ID,V), ooasp_isa(I,C,ID), ooasp_attribute_minInclusive(I,C,AT,MIN), ooasp_attribute_maxInclusive(I,C,AT,MAX), V>MAX.
 % Subclass attribute check
-:- ooasp_instantiation(M,I), ooasp_attribute_enum(M,C,AT,V1), ooasp_subclass(M,SC,C), ooasp_isa(I,SC,ID), ooasp_attribute_value(I,AT,ID,V2), V1!=V2.
+allowed_value(AT,ID,V) :- ooasp_instantiation(M,I), ooasp_attribute_enum(M,C,AT,V), ooasp_subclass(M,SC,C), ooasp_isa(I,SC,ID), ooasp_attribute_value(I,AT,ID,V).
 :- ooasp_attribute_value(I,AT,ID,V), ooasp_subclass(M,SC,C), ooasp_isa(I,SC,ID), ooasp_attribute_minInclusive(M,C,AT,MIN), ooasp_attribute_maxInclusive(M,C,AT,MAX), V<MIN.
 :- ooasp_attribute_value(I,AT,ID,V), ooasp_subclass(M,SC,C), ooasp_isa(I,SC,ID), ooasp_attribute_minInclusive(M,C,AT,MIN), ooasp_attribute_maxInclusive(M,C,AT,MAX), V>MAX.
+% Allowed string check
+:- ooasp_attribute_enum(M,C,AT,_), ooasp_attribute_value(I,AT,ID,V), not allowed_value(AT,ID,V).
 
 
 % Minimal set of components
